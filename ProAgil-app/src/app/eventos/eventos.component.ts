@@ -16,14 +16,14 @@ export class EventosComponent implements OnInit {
     this.getEventos();
   }
 
-  getEventos(){
+  getEventos() {
     this.eventos = this.http.get('http://localhost:5000/api/values').subscribe(
-      response => { 
+      response => {
         this.eventos = response;
         console.log(this.eventos);
       },
       error => {
-        console.error(error)
+        console.error(error);
       }
     );
   }
