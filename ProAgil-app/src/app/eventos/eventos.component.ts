@@ -26,7 +26,7 @@ export class EventosComponent implements OnInit {
   _filtroLista = '';
 
   constructor(
-    private eventoService: EventoService
+      private eventoService: EventoService
     , private modalService: BsModalService
   ) { }
 
