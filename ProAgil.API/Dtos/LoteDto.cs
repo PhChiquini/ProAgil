@@ -7,7 +7,7 @@ namespace ProAgil.API.Dtos
         public int Id { get; set; }
 
         [Required (ErrorMessage = "Campo {0} é obrigatório.")]
-        [Range(5,100, ErrorMessage = "O {0} deve ter entre 5 e 100 caracteres.")]
+        [StringLength(100, MinimumLength=(5), ErrorMessage = "O {0} deve ter entre 5 e 100 caracteres.")]
         public string Nome { get; set; }
         
         [Required (ErrorMessage = "Campo {0} é obrigatório.")]

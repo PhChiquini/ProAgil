@@ -11,7 +11,7 @@ namespace ProAgil.API.Dtos
         public string Nome { get; set; }
 
         [Required (ErrorMessage = "Campo {0} é obrigatório.")]
-        [MinLength(50, ErrorMessage = "O {0} deve conter no mínimo 50 caracteres.")]
+        [StringLength(100, MinimumLength=(50), ErrorMessage = "O {0} deve conter no mínimo 50 caracteres.")]
         public string MiniCurriculo { get; set; }
 
         [Required (ErrorMessage = "Campo {0} é obrigatório.")]
