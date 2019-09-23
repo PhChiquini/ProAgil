@@ -29,6 +29,10 @@ export class EventosComponent implements OnInit {
   modoSalvar = '';
   bodyDeletarEvento = '';
 
+  file: File;
+  fileNameToUpdate: string;
+  dataAtual: string;
+
   // tslint:disable-next-line: variable-name
   _filtroLista = null;
 
@@ -82,7 +86,11 @@ export class EventosComponent implements OnInit {
 
   editarEvento(evento: Evento, template: any) {
     this.modoSalvar = 'put';
-    this.evento = evento;
+    this.evento = Object.assign({}, evento);
+    this.fileNameToUpdate = evento.imagemURL.toString();
+
+    this.evento.imagemURL = '';
+
     this.openModal(template);
     this.registerForm.patchValue(this.evento);
     console.log('registerform: ' + this.registerForm.value);
@@ -107,13 +115,52 @@ export class EventosComponent implements OnInit {
     );
   }
 
+  onFileChange(event) {
+    const reader = new FileReader();
+
+    if (event.target.files && event.target.files.length) {
+
+      this.file = event.target.files;
+
+    }
+  }
+
+  uploadImagem() {
+
+    const fakeDirectory = this.evento.imagemURL.split('\\', 3);
+    this.evento.imagemURL = fakeDirectory[2];
+
+    if (this.modoSalvar === 'post') {
+      this.eventoService.postUpload(this.file, fakeDirectory[2])
+        .subscribe(
+          () => {
+            this.dataAtual = new Date().getMilliseconds().toString();
+          }
+        );
+
+    } else {
+      this.evento.imagemURL = this.fileNameToUpdate;
+      this.eventoService.postUpload(this.file, this.fileNameToUpdate)
+        .subscribe(
+          () => {
+            this.dataAtual = new Date().getMilliseconds().toString();
+          }
+        );
+
+    }
+  }
+
   salvarAlteracao(template: any) {
+
     if (this.registerForm.valid) {
       if (this.modoSalvar === 'post') {
+
         this.evento = Object.assign({}, this.registerForm.value);
+
+        this.uploadImagem();
+
         this.eventoService.postEvento(this.evento).subscribe(
           (novoEvento: Evento) => {
-            console.log(novoEvento);
             template.hide();
             this.getEventos();
             this.toastr.success('Inserido com Sucesso.');
@@ -124,9 +171,11 @@ export class EventosComponent implements OnInit {
         );
       } else {
         this.evento = Object.assign({ id: this.evento.id }, this.registerForm.value);
+
+        this.uploadImagem();
+
         this.eventoService.putEvento(this.evento.id, this.evento).subscribe(
           (novoEvento: Evento) => {
-            console.log(novoEvento);
             template.hide();
             this.getEventos();
             this.toastr.success('Editado com Sucesso.');
