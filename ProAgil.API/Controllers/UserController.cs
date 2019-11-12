@@ -43,7 +43,7 @@ namespace ProAgil.API.Controllers
             return Ok(new UserDto());
         }
 
-        [HttpPost("Register")]
+        [HttpPost("register")]
         [AllowAnonymous]
         public async Task<IActionResult> Register(UserDto userDto)
         {
